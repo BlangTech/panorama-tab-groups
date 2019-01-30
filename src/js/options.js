@@ -48,7 +48,9 @@ async function getStatistics() {
 	document.getElementById('thumbnailCacheSize').appendChild(document.createTextNode(formatByteSize(totalSize)));
 
 	document.getElementById('numberOfTabs').innerHTML = '';
-	document.getElementById('numberOfTabs').appendChild(document.createTextNode(tabs.length + ' (Active: ' + numActiveTabs + ')'));
+	document.getElementById('numberOfTabs').appendChild(document.createTextNode(
+		`${tabs.length} (${browser.i18n.getMessage('optionsStatisticsNumberOfTabsActive')} ${numActiveTabs})`)
+	);
 }
 
 /*function changeTheme() {
@@ -64,6 +66,9 @@ const nextView = 'activate-next-group';
 const previousView = 'activate-previous-group';
 
 async function init() {
+	addTranslations();
+	restoreOptions();
+
     let commands = await browser.commands.getAll();
     for (command of commands) {
         document.querySelector("#" + command.name).value = command.shortcut;
@@ -73,6 +78,38 @@ async function init() {
 	getStatistics();
     document.getElementById('backupFileInput').addEventListener('change', loadBackup);
     document.getElementById('saveBackupButton').addEventListener('click', saveBackup);
+}
+
+async function addTranslations() {
+	document.querySelector('#optionKeyboardShortcuts h2').innerHTML = browser.i18n.getMessage('optionKeyboardShortcuts');
+	const optionKeyboardShortcutsLink = document.querySelector('#optionKeyboardShortcuts a');
+	optionKeyboardShortcutsLink.href = browser.i18n.getMessage('optionKeyboardShortcutsHelpLink');
+	optionKeyboardShortcutsLink.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsHelpLinkText');
+	const optionKeyboardShortcutsButtonsUpdate = document.querySelectorAll('#optionKeyboardShortcuts button[id^="update"]');
+	optionKeyboardShortcutsButtonsUpdate.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsUpdate') });
+	const optionKeyboardShortcutsButtonsReset = document.querySelectorAll('#optionKeyboardShortcuts button[id^="reset"]');
+	optionKeyboardShortcutsButtonsReset.forEach((button) => { button.innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsButtonsReset') });
+	document.querySelector('label[for="toggle-panorama-view"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsToggle');
+	document.querySelector('label[for="activate-next-group"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsNextGroup');
+	document.querySelector('label[for="activate-previous-group"]').innerHTML = browser.i18n.getMessage('optionKeyboardShortcutsPreviousGroup');
+	document.querySelector('#optionsTheme h2').innerHTML = browser.i18n.getMessage('optionsTheme');
+	document.querySelector('label[for="themeLight"] span').innerHTML = browser.i18n.getMessage('optionsThemeLight');
+	document.querySelector('label[for="themeDark"] span').innerHTML = browser.i18n.getMessage('optionsThemeDark');
+	document.querySelector('#optionsToolbar h2').innerHTML = browser.i18n.getMessage('optionsToolbar');
+	document.querySelector('#optionsToolbar h3').innerHTML = browser.i18n.getMessage('optionsToolbarPosition');
+	document.querySelector('label[for="toolbarPositionTop"] span').innerHTML = browser.i18n.getMessage('optionsToolbarPositionTop');
+	document.querySelector('label[for="toolbarPositionRight"] span').innerHTML = browser.i18n.getMessage('optionsToolbarPositionRight');
+	document.querySelector('label[for="toolbarPositionBottom"] span').innerHTML = browser.i18n.getMessage('optionsToolbarPositionBottom');
+	document.querySelector('label[for="toolbarPositionLeft"] span').innerHTML = browser.i18n.getMessage('optionsToolbarPositionLeft');
+	document.querySelector('#optionsBackup h2').innerHTML = browser.i18n.getMessage('optionsBackup');
+	document.querySelector('#optionsBackup h3:nth-of-type(1)').innerHTML = browser.i18n.getMessage('optionsBackupImport');
+	document.querySelector('#optionsBackup p:nth-of-type(1)').innerHTML = browser.i18n.getMessage('optionsBackupImportText');
+	document.querySelector('#optionsBackup h3:nth-of-type(2)').innerHTML = browser.i18n.getMessage('optionsBackupExport');
+	document.querySelector('#optionsBackup p:nth-of-type(2)').innerHTML = browser.i18n.getMessage('optionsBackupExportText');
+	document.querySelector('#optionsStatistics h2').innerHTML = browser.i18n.getMessage('optionsStatistics');
+	document.querySelector('label[for="numberOfTabs"]').innerHTML = browser.i18n.getMessage('optionsStatisticsNumberOfTabs');
+	document.querySelector('label[for="thumbnailCacheSize"]').innerHTML = browser.i18n.getMessage('optionsStatisticsThumbnailCacheSize');
+	document.querySelector('#saveBackupButton').innerHTML = browser.i18n.getMessage('optionsBackupExportButton')
 }
 
 async function updateToggle() {
@@ -111,6 +148,31 @@ async function resetPreviousView() {
     init();
 }
 
+function saveOptionTheme() {
+  browser.storage.sync.set({
+    theme: document.querySelector('input[name="theme"]:checked').value
+  });
+}
+
+function saveOptionToolbarPosition() {
+  browser.storage.sync.set({
+    toolbarPosition: document.querySelector('input[name="toolbarPosition"]:checked').value
+  });
+}
+
+function restoreOptions() {
+  browser.storage.sync.get({
+		theme: 'light',
+		toolbarPosition: 'top',
+	}).then((options) => {
+		// Theme
+    document.querySelector(`input[name="theme"][value="${options.theme}"]`).checked = true;
+
+		// Toolbar
+    document.querySelector(`input[name="toolbarPosition"][value="${options.toolbarPosition}"]`).checked = true;
+  });
+}
+
 document.addEventListener('DOMContentLoaded', init);
 document.querySelector('#updateToggle').addEventListener('click', updateToggle);
 document.querySelector('#updateNextView').addEventListener('click', updateNextView);
@@ -118,3 +180,5 @@ document.querySelector('#updatePreviousView').addEventListener('click', updatePr
 document.querySelector('#resetToggle').addEventListener('click', resetToggle);
 document.querySelector('#resetNextView').addEventListener('click', resetNextView);
 document.querySelector('#resetPreviousView').addEventListener('click', resetPreviousView);
+document.querySelector('form[name="formTheme"]').addEventListener('change', saveOptionTheme);
+document.querySelector('form[name="formToolbarPosition"]').addEventListener('change', saveOptionToolbarPosition);

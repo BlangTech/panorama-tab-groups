@@ -1,0 +1,101 @@
+{
+    "newGroupButton": {
+        "message": "Add new group"
+    },
+    "settingsButton": {
+        "message": "Settings"
+    },
+    "defaultGroupName": {
+        "message": "Unnamed group"
+    },
+    "dragGroup": {
+        "message": "Drag group"
+    },
+    "closeGroup": {
+        "message": "Close group"
+    },
+    "closeGroupWarning": {
+        "message": "Closing this group will close the $1 tab$2 within it. Are you sure you want to do this?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Keyboard Shortcuts"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "The format for the shortcut option is detailed here."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Update"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Reset"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Toggle Panorama View"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Activate the next Tab Group"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Activate the previous Tab Group"
+    },
+    "optionsTheme": {
+        "message": "Theme"
+    },
+    "optionsThemeLight": {
+        "message": "light"
+    },
+    "optionsThemeDark": {
+        "message": "dark"
+    },
+    "optionsToolbar": {
+        "message": "Toolbar"
+    },
+    "optionsToolbarPosition": {
+        "message": "Position"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "top"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "right"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "bottom"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "left"
+    },
+    "optionsBackup": {
+        "message": "Backup"
+    },
+    "optionsBackupImport": {
+        "message": "Import"
+    },
+    "optionsBackupImportText": {
+        "message": "Imported backups will open in new windows and not overwrite anything.<br />You can also import backups from the old \"Tab Groups\" add-on."
+    },
+    "optionsBackupExport": {
+        "message": "Export"
+    },
+    "optionsBackupExportText": {
+        "message": "This section might be made obsolete once proper session management is possible in Firefox."
+    },
+    "optionsBackupExportButton": {
+        "message": "Save backup"
+    },
+    "optionsStatistics": {
+        "message": "Statistics"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Number of Tabs:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Active:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Thumbnail Cache Size:"
+    }
+}

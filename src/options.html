@@ -5,11 +5,14 @@
 		<link rel="stylesheet" type="text/css" href="css/options.css">
 	</head>
 	<body>
-		<section>
+		<section id="optionKeyboardShortcuts">
 			<h2>Keyboard Shortcuts</h2>
+			<p>
+				<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here.</a></em>
+			</p>
 			<div class="keyboardShortcuts">
 				<form class="browser-style">
-					<label>Toggle Panorama View</label>
+					<label for="toggle-panorama-view">Toggle Panorama View</label>
 					<input type="text" id="toggle-panorama-view">
 					<button id="updateToggle" class="browser-style">Update</button>
 					<button id="resetToggle" class="browser-style">Reset</button>
@@ -17,7 +20,7 @@
 			</div>
 			<div class="keyboardShortcuts">
 				<form class="browser-style">
-					<label>Activate the next TabGroup</label>
+					<label for="activate-next-group">Activate the next Tab Group</label>
 					<input type="text" id="activate-next-group">
 					<button id="updateNextView" class="browser-style">Update</button>
 					<button id="resetNextView" class="browser-style">Reset</button>
@@ -25,29 +28,67 @@
 			</div>
 			<div class="keyboardShortcuts">
 				<form class="browser-style">
-					<label>Activate the previous TabGroup</label>
+					<label for="activate-previous-group">Activate the previous Tab Group</label>
 					<input type="text" id="activate-previous-group">
 					<button id="updatePreviousView" class="browser-style">Update</button>
 					<button id="resetPreviousView" class="browser-style">Reset</button>
 				</form>
 			</div>
-		<em><a href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations" target="_blank">The format for the shortcut option is detailed here</a></em>
 		</section>
-		<!--section>
-			<h2>Themes</h2>
-
-			<form id="theme">
-				<div>
-					<input type="radio" id="lightThemeRadio" name="contact" value="light">
-					<label for="lightThemeRadio">Light</label>
+		<section id="optionsTheme">
+			<h2>Theme</h2>
+			<form class="browser-style" name="formTheme">
+				<div class="input-radio-image">
+				  <input type="radio" id="themeLight" name="theme" value="light"/>
+				  <label for="themeLight">
+						<img src="/icons/options/theme-light.png" alt="" />
+						<span>light</span>
+					</label>
 				</div>
-				<div>
-					<input type="radio" id="darkThemeRadio" name="contact" value="dark">
-					<label for="darkThemeRadio">Dark</label>
+				<div class="input-radio-image">
+				  <input type="radio" id="themeDark" name="theme" value="dark"/>
+				  <label for="themeDark">
+						<img src="/icons/options/theme-dark.png" alt="" />
+						<span>dark</span>
+					</label>
 				</div>
 			</form>
-		</section-->
-		<section>
+		</section>
+		<section id="optionsToolbar">
+			<h2>Toolbar</h2>
+			<h3>Position</h3>
+			<form class="browser-style" name="formToolbarPosition">
+				<div class="input-radio-image">
+				  <input type="radio" id="toolbarPositionTop" name="toolbarPosition" value="top"/>
+				  <label for="toolbarPositionTop">
+						<img src="/icons/options/toolbar-position-top.png" alt="" />
+						<span>top</span>
+					</label>
+				</div>
+				<div class="input-radio-image">
+				  <input type="radio" id="toolbarPositionRight" name="toolbarPosition" value="right"/>
+				  <label for="toolbarPositionRight">
+						<img src="/icons/options/toolbar-position-right.png" alt="" />
+						<span>right</span>
+					</label>
+				</div>
+				<div class="input-radio-image">
+				  <input type="radio" id="toolbarPositionBottom" name="toolbarPosition" value="bottom"/>
+				  <label for="toolbarPositionBottom">
+						<img src="/icons/options/toolbar-position-bottom.png" alt="" />
+						<span>bottom</span>
+					</label>
+				</div>
+				<div class="input-radio-image">
+				  <input type="radio" id="toolbarPositionLeft" name="toolbarPosition" value="left"/>
+				  <label for="toolbarPositionLeft">
+						<img src="/icons/options/toolbar-position-left.png" alt="" />
+						<span>left</span>
+					</label>
+				</div>
+			</div>
+		</section>
+		<section id="optionsBackup">
 			<h2>Backups</h2>
 			<h3>Import</h3>
 			<p>
@@ -65,14 +106,14 @@
 				<button id="saveBackupButton" class="browser-style">Save backup</button>
 			</div>
 		</section>
-		<section>
+		<section id="optionsStatistics">
 			<h2>Statistics</h2>
 			<div>
-				<label for="numberOfTabs">Number of Tabs</label>
+				<label for="numberOfTabs">Number of Tabs:</label>
 				<strong><span id="numberOfTabs"></span></strong>
 			</div>
 			<div>
-				<label for="thumbnailCacheSize">Thumbnail Cache Size</label>
+				<label for="thumbnailCacheSize">Thumbnail Cache Size:</label>
 				<strong><span id="thumbnailCacheSize"></span></strong>
 			</div>
 		</section>

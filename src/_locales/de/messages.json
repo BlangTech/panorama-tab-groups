@@ -1,0 +1,101 @@
+{
+    "newGroupButton": {
+        "message": "Neue Gruppe hinzufügen"
+    },
+    "settingsButton": {
+        "message": "Einstellungen"
+    },
+    "defaultGroupName": {
+        "message": "Namenlose Gruppe"
+    },
+    "dragGroup": {
+        "message": "Gruppe bewegen"
+    },
+    "closeGroup": {
+        "message": "Gruppe schließen"
+    },
+    "closeGroupWarning": {
+        "message": "Sie sind dabei, mit dieser Gruppe $1 Tab$2 zu schließen. Soll dieser Vorgang wirklich fortgesetzt werden?"
+    },
+    "optionKeyboardShortcuts": {
+        "message": "Tastenkombinationen"
+    },
+    "optionKeyboardShortcutsHelpLink": {
+        "message": "https://developer.mozilla.org/de/docs/Mozilla/Add-ons/WebExtensions/manifest.json/commands#Tastenk%C3%BCrzel-Werte"
+    },
+    "optionKeyboardShortcutsHelpLinkText": {
+        "message": "Eine Beschreibung für das Format der Tastenkombinationen ist hier zu finden."
+    },
+    "optionKeyboardShortcutsButtonsUpdate": {
+        "message": "Aktualisieren"
+    },
+    "optionKeyboardShortcutsButtonsReset": {
+        "message": "Zurücksetzen"
+    },
+    "optionKeyboardShortcutsToggle": {
+        "message": "Panorama View umschalten"
+    },
+    "optionKeyboardShortcutsNextGroup": {
+        "message": "Die nächste Tab Gruppe aktivieren"
+    },
+    "optionKeyboardShortcutsPreviousGroup": {
+        "message": "Die vorherige Tab Gruppe aktivieren"
+    },
+    "optionsTheme": {
+        "message": "Farbschema"
+    },
+    "optionsThemeLight": {
+        "message": "hell"
+    },
+    "optionsThemeDark": {
+        "message": "dunkel"
+    },
+    "optionsToolbar": {
+        "message": "Werkzeugleiste"
+    },
+    "optionsToolbarPosition": {
+        "message": "Position"
+    },
+    "optionsToolbarPositionTop": {
+        "message": "oben"
+    },
+    "optionsToolbarPositionRight": {
+        "message": "rechts"
+    },
+    "optionsToolbarPositionBottom": {
+        "message": "unten"
+    },
+    "optionsToolbarPositionLeft": {
+        "message": "links"
+    },
+    "optionsBackup": {
+        "message": "Sicherung"
+    },
+    "optionsBackupImport": {
+        "message": "Importieren"
+    },
+    "optionsBackupImportText": {
+        "message": "Importierte Sicherungen werden in ein neues Fenster geöffnet ohne etwas zu überschreiben.<br />Es ist ebenfalls möglich Links von der alten Tab Gruppen Erweiterung zu importieren."
+    },
+    "optionsBackupExport": {
+        "message": "Exportieren"
+    },
+    "optionsBackupExportText": {
+        "message": "Dieser Abschnitt wird in Zukunft vielleicht wegfallen, sobald ein passendes Session Management im Firefox verfügbar ist."
+    },
+    "optionsBackupExportButton": {
+        "message": "Sicherung exportieren"
+    },
+    "optionsStatistics": {
+        "message": "Statistik"
+    },
+    "optionsStatisticsNumberOfTabs": {
+        "message": "Anzahl der Tabs:"
+    },
+    "optionsStatisticsNumberOfTabsActive": {
+        "message": "Aktive:"
+    },
+    "optionsStatisticsThumbnailCacheSize": {
+        "message": "Cache-Größe der Vorschaubilder:"
+    }
+}

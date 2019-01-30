@@ -1,5 +1,7 @@
-
 body {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
 	margin: 0;
 
 	background-color: #f9f9fa;
@@ -9,27 +11,18 @@ body {
 }
 
 #groups {
-	position: absolute;
-	top: 4px;
-	right: 42px;
-	bottom: 4px;
-	left: 4px;
-
+	flex-grow: 1;
+	margin: 4px;
+	position: relative;
 	overflow: auto;
 }
 
 #toolbar {
-	width: 28px;
-	padding: 0 5px;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 4px;
 
-	position: fixed;
-	top: 8px;
-	right: 0;
-	bottom: 8px;
-
-	z-index: 1000000000;
-
-	border-left: rgba(12, 12, 13, 0.1) 1px solid;
+	border-bottom: 1px solid rgba(12, 12, 13, 0.1);
 
 	background-color: inherit;
 }
@@ -37,6 +30,7 @@ body {
 #toolbar .button {
 	width: 28px;
 	height: 28px;
+	margin: 4px;
 
 	border-radius: 4px;
 
@@ -56,26 +50,88 @@ body {
 	background-image: url(/icons/plus_dark.svg);
 }
 
-#toggleTheme {
-	background-image: url(/icons/theme_dark.svg);
-}
-
 #settings {
 	background-image: url(/icons/preferences_dark.svg);
 }
 
-.drag_indicator {
-	width: 2px;
-	height: 100px;
+#pinnedTabs {
+	display: flex;
+	border-left: 1px solid #ccc;
+	margin-left: 4px;
+	padding: 0 4px;
+}
 
-	position: absolute;
-	z-index: 1000000000;
+#pinnedTabs .tab {
+	width: 28px;
+	height: 28px;
+	margin: 4px;
+	position: relative;
+	background: #fff;
+}
 
-	background-color: #00adff;
-
+#pinnedTabs .tab .close,
+#pinnedTabs .tab .name {
 	display: none;
 }
 
-.drag_indicator.show {
-	display: block;
+#pinnedTabs .tab .inner {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-image: none !important;
+	border: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#pinnedTabs .tab .favicon {
+	background-color: transparent;
+	border: 0;
+	position: relative;
+}
+
+#pinnedTabs .tab .thumbnail {
+	bottom: 0;
+	filter: brightness(0.8);
+}
+
+.toolbar-right,
+.toolbar-left {
+	flex-direction: row;
+}
+
+.toolbar-right #toolbar,
+.toolbar-left #toolbar {
+	flex-direction: column;
+	border-bottom: none;
+}
+
+.toolbar-bottom #toolbar,
+.toolbar-right #toolbar {
+	order: 1;
+}
+
+.toolbar-right #toolbar {
+	border-left: 1px solid rgba(12, 12, 13, 0.1);
+}
+
+.toolbar-bottom #toolbar {
+	border-top: 1px solid rgba(12, 12, 13, 0.1);
+	border-bottom: none;
+}
+
+.toolbar-left #toolbar {
+	border-right: 1px solid rgba(12, 12, 13, 0.1);
+}
+
+.toolbar-right #pinnedTabs,
+.toolbar-left #pinnedTabs {
+	flex-direction: column;
+	border-top: 1px solid #ccc;
+	border-left: none;
+	margin-top: 4px;
+	margin-left: 0;
+	padding: 4px 0;
 }

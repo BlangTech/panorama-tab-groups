@@ -1,6 +1,8 @@
 
 'use strict';
 
+let manifest = browser.runtime.getManifest();
+
 /*var config = {
 	tab: {
 		minWidth: 100,
@@ -37,7 +39,7 @@ async function triggerCommand(command) {
 		await browser.sessions.setWindowValue(windowId, 'activeGroup', activeGroup);
 
 		await toggleVisibleTabs(activeGroup, true);
-        
+
 	}else if (command === "toggle-panorama-view") {
 		toggleView();
 	}
@@ -45,7 +47,7 @@ async function triggerCommand(command) {
 
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
 async function toggleView() {
-        var extTabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
+    var extTabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
 
 	if(extTabs.length > 0) {
 
@@ -79,28 +81,30 @@ async function toggleView() {
 
 /** Callback function which will be called whenever a tab is opened */
 async function tabCreated(tab) {
-	if(!openingBackup) {
-		if(!openingView) {
-			// Normal case: everything except the Panorama View tab
-			// If the tab does not have a group, set its group to the current group
-			var tabGroupId = await browser.sessions.getTabValue(tab.id, 'groupId');
+	if(openingBackup) {
+		return;
+	}
 
-			if(tabGroupId === undefined) {
+	if(!openingView) {
+		// Normal case: everything except the Panorama View tab
+		// If the tab does not have a group, set its group to the current group
+		var tabGroupId = await browser.sessions.getTabValue(tab.id, 'groupId');
 
-				var activeGroup = undefined;
+		if(tabGroupId === undefined) {
 
-				while(activeGroup === undefined) {
-					activeGroup = (await browser.sessions.getWindowValue(tab.windowId, 'activeGroup'));
-				}
+			var activeGroup = undefined;
 
-				browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
+			while(activeGroup === undefined) {
+				activeGroup = (await browser.sessions.getWindowValue(tab.windowId, 'activeGroup'));
 			}
-		}else{
-			// Opening the Panorama View tab
-			// Make sure it's in the special group
-			openingView = false;
-			browser.sessions.setTabValue(tab.id, 'groupId', -1);
+
+			browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
 		}
+	}else{
+		// Opening the Panorama View tab
+		// Make sure it's in the special group
+		openingView = false;
+		browser.sessions.setTabValue(tab.id, 'groupId', -1);
 	}
 }
 
@@ -114,27 +118,32 @@ function tabDetached(tabId, detachInfo) {
 }
 
 
-/** Callback function which will be called whenever the user switches tabs */
+/** Callback function which will be called whenever the user switches tabs.
+ * This callback needed for properly switch between groups, when current tab
+ * is from another group (or is Panorama Tab Groups tab).
+*/
 async function tabActivated(activeInfo) {
 
 	var tab = await browser.tabs.get(activeInfo.tabId);
 
-	if(!tab.pinned) {
-
-		// Set the window's active group to the new active tab's group
-		// If this is a newly-created tab, tabCreated() might not have set a
-		// groupId yet, so retry until it does.
-		var activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
-		while (activeGroup === undefined) {
-			activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
-		}
-
-		if(activeGroup != -1) {
-			await browser.sessions.setWindowValue(tab.windowId, 'activeGroup', activeGroup);
-		}
-
-		await toggleVisibleTabs(activeGroup);
+	if(tab.pinned) {
+		return;
 	}
+
+	// Set the window's active group to the new active tab's group
+	// If this is a newly-created tab, tabCreated() might not have set a
+	// groupId yet, so retry until it does.
+	var activeGroup = undefined;
+	while (activeGroup === undefined) {
+		activeGroup = await browser.sessions.getTabValue(activeInfo.tabId, 'groupId');
+	}
+
+	if(activeGroup != -1) {
+		// activated tab is not Panorama View tab
+		await browser.sessions.setWindowValue(tab.windowId, 'activeGroup', activeGroup);
+	}
+
+	await toggleVisibleTabs(activeGroup);
 }
 
 async function toggleVisibleTabs(activeGroup, noTabSelected) {
@@ -175,12 +184,7 @@ async function setupWindows() {
 	const windows = browser.windows.getAll({});
 
 	for(const window of await windows) {
-
-		var groups = await browser.sessions.getWindowValue(window.id, 'groups');
-
-		if(groups === undefined) {
-			createGroupInWindow(window);
-		}
+		createGroupInWindowIfMissing(window);
 	}
 }
 
@@ -196,32 +200,43 @@ async function newGroupUid(windowId) {
 	return uid;
 }
 
+/** Checks that group is missing before creating new one in window
+ * This makes sure existing/restored windows are not reinitialized.
+ * For example, windows that are restored by user (e.g. Ctrl+Shift+N) will
+ * trigger the onCreated event but still have the existing group data.
+ */
+async function createGroupInWindowIfMissing(window) {
+	var groups = await browser.sessions.getWindowValue(window.id, 'groups');
+
+	if (!groups || !groups.length) {
+		console.log(`No groups found for window ${window.id}!`);
+		createGroupInWindow(window);
+	}
+}
+
 /** Create the first group in a window
  * This handles new windows and, during installation, existing windows
  * that do not yet have a group */
 async function createGroupInWindow(window) {
 
-	if(!openingBackup) {
-
-		var currentGroups = await browser.sessions.getWindowValue(window.id, 'groups');
-
-		if(!currentGroups) {
-
-			var groupId = await newGroupUid(window.id);
-
-			var groups = [{
-				id: groupId,
-				name: 'Unnamed Group',
-				containerId: 'firefox-default',
-				rect: {x: 0, y: 0, w: 0.5, h: 0.5},
-				lastMoved: (new Date).getTime(),
-			}];
-
-
-			browser.sessions.setWindowValue(window.id, 'groups', groups);
-			browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
-		}
+	if(openingBackup) {
+		console.log('Skipping creation of groups since we are opening backup');
+		return;
 	}
+
+	var groupId = await newGroupUid(window.id);
+
+	var groups = [{
+		id: groupId,
+		name: browser.i18n.getMessage("defaultGroupName"),
+		containerId: 'firefox-default',
+		rect: {x: 0, y: 0, w: 0.5, h: 0.5},
+		lastMoved: (new Date).getTime(),
+	}];
+
+
+	browser.sessions.setWindowValue(window.id, 'groups', groups);
+	browser.sessions.setWindowValue(window.id, 'activeGroup', groupId);
 }
 
 /** Put any tabs that do not have a group into the active group */
@@ -249,6 +264,7 @@ async function salvageGrouplessTabs() {
 				break;
 			}
 		}
+
 		if(!groupExists && groupId != -1) {
 			var activeGroup = await browser.sessions.getWindowValue(tab.windowId, 'activeGroup');
 			browser.sessions.setTabValue(tab.id, 'groupId', activeGroup);
@@ -258,14 +274,18 @@ async function salvageGrouplessTabs() {
 
 async function init() {
 
+	console.log('Initializing Panorama Tab View');
+
 	await setupWindows();
 	await salvageGrouplessTabs();
+
+	console.log('Finished setup');
 
 	await migrate(); //keep until everyone are on 0.8.0
 
 	browser.commands.onCommand.addListener(triggerCommand);
 	browser.browserAction.onClicked.addListener(toggleView);
-	browser.windows.onCreated.addListener(createGroupInWindow);
+	browser.windows.onCreated.addListener(createGroupInWindowIfMissing);
 	browser.tabs.onCreated.addListener(tabCreated);
 	browser.tabs.onAttached.addListener(tabAttached);
 	browser.tabs.onDetached.addListener(tabDetached);
@@ -316,10 +336,24 @@ function handleMessage(message, sender) {
     }
     else if (message == "activate-next-group") {
         triggerCommand("activate-next-group");
-    } 
+    }
     else if (message == "activate-previous-group") {
         triggerCommand("activate-previous-group");
     }
 }
 
 browser.runtime.onMessageExternal.addListener(handleMessage);
+
+/*
+ * Handle upboarding
+ */
+function onRuntimeInstallNotification(details) {
+	// Open new tab to the release notes after update
+  if (details.reason = 'update') {
+    browser.tabs.create({
+      url: `https://github.com/projectdelphai/panorama-tab-groups/releases/tag/${manifest.version}`
+    });
+  }
+}
+
+browser.runtime.onInstalled.addListener(onRuntimeInstallNotification);
